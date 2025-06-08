@@ -1,0 +1,43 @@
+{
+  "Polaris": {
+    "DatePicker": {
+      "previousMonth": "Показати минулий місяць, {previousMonthName} {showPreviousYear}",
+      "nextMonth": "Показати наступний місяць, {nextMonth} {nextYear}",
+      "today": "Сьогодні ",
+      "start": "Початок діапазону",
+      "end": "Кінець діапазону",
+      "months": {
+        "january": "Січень",
+        "february": "Лютий",
+        "march": "Березень",
+        "april": "Квітень",
+        "may": "Травень",
+        "june": "Червень",
+        "july": "Липень",
+        "august": "Серпень",
+        "september": "Вересень",
+        "october": "Жовтень",
+        "november": "Листопад",
+        "december": "Грудень"
+      },
+      "days": {
+        "monday": "Понеділок",
+        "tuesday": "Вівторок",
+        "wednesday": "Середа",
+        "thursday": "Четвер",
+        "friday": "Пʼятниця",
+        "saturday": "Субота",
+        "sunday": "Неділя"
+      },
+      "daysAbbreviated": {
+        "monday": "Пн",
+        "tuesday": "Вт",
+        "wednesday": "Ср",
+        "thursday": "Чт",
+        "friday": "Пт",
+        "saturday": "Сб",
+        "sunday": "Нд"
+      }
+    }
+  }
+}
