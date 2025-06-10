@@ -144,7 +144,9 @@ export default function Index() {
   };
 
   const handleExport = () => {
-    fetcher.load("/orders");
+    fetcher.load(
+      `/orders?rangeStart=${selectedDates.start.toISOString()}&rangeEnd=${selectedDates.end.toISOString()}`,
+    );
   };
 
   useEffect(() => {
