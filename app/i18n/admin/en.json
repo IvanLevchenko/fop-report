@@ -1,3 +1,6 @@
 {
-  "dateRangeTooltip": "Select a date range to filter the data displayed in the report."
+  "dateRangeTooltip": "Select a date range to filter the orders displayed in the report",
+  "rangeLabel": "Select a date range",
+  "exportButton": "Export",
+  "successToast": "Successfully exported"
 }

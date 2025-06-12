@@ -6,6 +6,7 @@ import shopify from "app/api/shopify";
 import { orders } from "app/calls/orders";
 import type { ExportOrder } from "app/types/export-order";
 import { CsvHelper } from "app/helpers/csv-helper";
+import { RateHelper } from "app/helpers/rate-helper";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const { session } = await authenticate.admin(request);
@@ -13,6 +14,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
   const rangeStart = url.searchParams.get("rangeStart");
   const rangeEnd = url.searchParams.get("rangeEnd");
+  const language = url.searchParams.get("language");
 
   if (!rangeStart || !rangeEnd) {
     throw new Error("Range start and end dates are required.");
@@ -36,7 +38,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     result.data.orders = nextPage.data.orders;
   }
 
-  await CsvHelper.generateCsv(ordersList);
+  await CsvHelper.generateCsv(ordersList, new RateHelper(), language || "");
 
   return ordersList;
 };

@@ -3,7 +3,7 @@
 client_id = "d1b3b7b5513b33ab7769a60a7bdd4c52"
 name = "fop-report"
 handle = "fop-report"
-application_url = "https://close-seeking-glen-too.trycloudflare.com"
+application_url = "https://blogs-nathan-auburn-rocks.trycloudflare.com"
 embedded = true
 
 [build]
@@ -27,9 +27,9 @@ scopes = "write_products,read_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://close-seeking-glen-too.trycloudflare.com/auth/callback",
-  "https://close-seeking-glen-too.trycloudflare.com/auth/shopify/callback",
-  "https://close-seeking-glen-too.trycloudflare.com/api/auth/callback"
+  "https://blogs-nathan-auburn-rocks.trycloudflare.com/auth/callback",
+  "https://blogs-nathan-auburn-rocks.trycloudflare.com/auth/shopify/callback",
+  "https://blogs-nathan-auburn-rocks.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

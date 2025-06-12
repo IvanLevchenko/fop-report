@@ -4,8 +4,8 @@ export type ExportOrder = {
   id: string;
   name: string;
   closed: boolean;
-  closedAt: string | null;
-  createdAt: string;
+  closedAt: Date | null;
+  createdAt: Date;
   totalPriceSet: MoneySet;
   netPaymentSet: MoneySet;
   totalTaxSet: MoneySet;

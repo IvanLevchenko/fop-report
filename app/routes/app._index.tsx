@@ -144,8 +144,11 @@ export default function Index() {
   };
 
   const handleExport = () => {
+    const rangeStart = selectedDates.start.toISOString();
+    const rangeEnd = selectedDates.end.toISOString();
+
     fetcher.load(
-      `/orders?rangeStart=${selectedDates.start.toISOString()}&rangeEnd=${selectedDates.end.toISOString()}`,
+      `/orders?rangeStart=${rangeStart}&rangeEnd=${rangeEnd}&language=${localization}`,
     );
   };
 
@@ -160,7 +163,9 @@ export default function Index() {
   }, [localization]);
 
   useEffect(() => {
-    console.log(fetcher.data);
+    if (fetcher.data && fetcher.state === "idle") {
+      shopify.toast.show(i18n.successToast);
+    }
   }, [fetcher.data]);
 
   return (
@@ -177,7 +182,7 @@ export default function Index() {
                 <Button icon={InfoIcon}></Button>
               </Tooltip>
               <Text as="h2" variant="headingMd" fontWeight="bold">
-                Select a date range
+                {i18n.rangeLabel}
               </Text>
             </InlineStack>
             <br />
@@ -193,8 +198,12 @@ export default function Index() {
             />
             <br />
             <InlineStack align="end">
-              <Button variant="primary" onClick={handleExport}>
-                Export
+              <Button
+                variant="primary"
+                loading={fetcher.state === "loading"}
+                onClick={handleExport}
+              >
+                {i18n.exportButton}
               </Button>
             </InlineStack>
           </Card>
