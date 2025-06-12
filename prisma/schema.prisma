@@ -29,5 +29,5 @@ model Rate {
   id       String   @id
   currency String
   rate     String
-  date     DateTime
+  date     String
 }
