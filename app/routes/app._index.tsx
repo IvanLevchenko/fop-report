@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Page,
   Layout,
@@ -18,110 +18,13 @@ import { useLocalizator } from "app/hooks/use-localizator";
 
 import defaultLocalization from "app/i18n/admin/en.json";
 import { useFetcher } from "@remix-run/react";
-
-// export const loader = async ({ request }: LoaderFunctionArgs) => {
-//   // const { session } = await authenticate.admin(request);
-
-//   // const client = new shopify.clients.Graphql({ session });
-//   // const result = await client.request(...orders());
-
-//   // return {
-//   //   products: result.data,
-//   // };
-// };
-
-// export const action = async ({ request }: ActionFunctionArgs) => {
-//   const { session } = await authenticate.admin(request);
-//   const client = new shopify.clients.Graphql({ session });
-
-//   await client.query({
-//     data: {
-//       query: `mutation orderCreate($order: OrderCreateOrderInput!, $options: OrderCreateOptionsInput) {
-//       orderCreate(order: $order, options: $options) {
-//         userErrors {
-//           field
-//           message
-//         }
-//         order {
-//           id
-//           totalTaxSet {
-//             shopMoney {
-//               amount
-//               currencyCode
-//             }
-//           }
-//           lineItems(first: 5) {
-//             nodes {
-//               variant {
-//                 id
-//               }
-//               id
-//               title
-//               quantity
-//               taxLines {
-//                 title
-//                 rate
-//                 priceSet {
-//                   shopMoney {
-//                     amount
-//                     currencyCode
-//                   }
-//                 }
-//               }
-//             }
-//           }
-//         }
-//       }
-//     }`,
-//       variables: {
-//         order: {
-//           currency: "EUR",
-//           lineItems: [
-//             {
-//               title: "Big Brown Bear Boots",
-//               priceSet: {
-//                 shopMoney: {
-//                   amount: 74.99,
-//                   currencyCode: "EUR",
-//                 },
-//               },
-//               quantity: 3,
-//               taxLines: [
-//                 {
-//                   priceSet: {
-//                     shopMoney: {
-//                       amount: 13.5,
-//                       currencyCode: "EUR",
-//                     },
-//                   },
-//                   rate: 0.06,
-//                   title: "State tax",
-//                 },
-//               ],
-//             },
-//           ],
-//           transactions: [
-//             {
-//               kind: "SALE",
-//               status: "SUCCESS",
-//               amountSet: {
-//                 shopMoney: {
-//                   amount: 238.47,
-//                   currencyCode: "EUR",
-//                 },
-//               },
-//             },
-//           ],
-//         },
-//       },
-//     },
-//   });
-
-//   return null;
-// };
+import { type loader } from "./orders";
+import { type GeneratedCsv } from "app/helpers/csv-helper";
+import { base64ToBlob } from "app/helpers/base64-to-blob";
 
 export default function Index() {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof loader>();
+  const exportRef = useRef(false);
 
   // Date management
   const today = new Date();
@@ -150,6 +53,18 @@ export default function Index() {
     fetcher.load(
       `/orders?rangeStart=${rangeStart}&rangeEnd=${rangeEnd}&language=${localization}`,
     );
+    exportRef.current = true;
+  };
+
+  const handleDownload = async (csv: GeneratedCsv) => {
+    const url = URL.createObjectURL(base64ToBlob(csv.base64, csv.type));
+
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = csv.path.split("/").at(-1) as string;
+    link.click();
+
+    URL.revokeObjectURL(url);
   };
 
   useEffect(() => {
@@ -163,10 +78,17 @@ export default function Index() {
   }, [localization]);
 
   useEffect(() => {
-    if (fetcher.data && fetcher.state === "idle") {
+    if (fetcher.data && fetcher.state === "idle" && exportRef.current) {
       shopify.toast.show(i18n.successToast);
     }
-  }, [fetcher.data]);
+
+    if (fetcher.data && exportRef.current) {
+      handleDownload(fetcher.data as GeneratedCsv);
+
+      exportRef.current = false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [fetcher.data, fetcher]);
 
   return (
     <Page>

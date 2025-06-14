@@ -1,17 +1,24 @@
-import fs from "node:fs";
+import fs, { createReadStream, type ReadStream } from "node:fs";
 import { join } from "node:path";
 
 import type { ExportOrder } from "app/types/export-order";
-import { RateHelper } from "./rate-helper";
+import type { RateHelper } from "./rate-helper";
+import { unlink } from "node:fs/promises";
 
 const __dirname = new URL(".", import.meta.url).pathname;
+
+export type GeneratedCsv = {
+  base64: string;
+  type: string;
+  path: string;
+};
 
 export class CsvHelper {
   public static async generateCsv(
     orders: ExportOrder[],
     rateHelper: RateHelper,
     language = "en",
-  ) {
+  ): Promise<GeneratedCsv> {
     const filesPath = join(__dirname, "..", "files");
     const date = new Date().toDateString().replace(/ /g, "-");
 
@@ -70,10 +77,44 @@ export class CsvHelper {
       fs.mkdirSync(filesPath);
     }
 
-    await fs.promises.writeFile(
-      `${filesPath}/${date}.csv`,
-      dataColumns + "\n" + data,
-      "utf8",
+    const filePath = `${filesPath}/${date}.csv`;
+
+    try {
+      await fs.promises.writeFile(filePath, dataColumns + "\n" + data, "utf8");
+    } catch (e) {
+      throw new Error("File generation failed.");
+    }
+
+    const blob = await CsvHelper.streamToBlob(
+      createReadStream(filePath, { highWaterMark: 5 * 1024 * 1024 }),
     );
+    const arrayBuffer = await blob.arrayBuffer();
+    const base64 = Buffer.from(arrayBuffer).toString("base64");
+
+    await unlink(filePath);
+
+    return {
+      base64,
+      type: blob.type,
+      path: filePath,
+    };
   }
+
+  private static streamToBlob = async (
+    readableStream: ReadStream,
+    mimeType = "text/csv",
+  ) => {
+    const chunks: (string | Buffer<ArrayBufferLike>)[] = [];
+    const promise: boolean = await new Promise((resolve) => {
+      readableStream.on("data", (chunk) => chunks.push(chunk));
+      readableStream.on("end", () => resolve(true));
+      readableStream.on("error", () => resolve(false));
+    });
+
+    if (!promise) {
+      return new Blob();
+    }
+
+    return new Blob(chunks, { type: mimeType });
+  };
 }

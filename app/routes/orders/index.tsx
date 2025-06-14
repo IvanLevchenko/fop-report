@@ -5,10 +5,12 @@ import type { OrderEdge } from "@shopify/hydrogen-react/storefront-api-types";
 import shopify from "app/api/shopify";
 import { orders } from "app/calls/orders";
 import type { ExportOrder } from "app/types/export-order";
-import { CsvHelper } from "app/helpers/csv-helper";
+import { CsvHelper, type GeneratedCsv } from "app/helpers/csv-helper";
 import { RateHelper } from "app/helpers/rate-helper";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export const loader = async ({
+  request,
+}: LoaderFunctionArgs): Promise<GeneratedCsv> => {
   const { session } = await authenticate.admin(request);
   const url = new URL(request.url);
 
@@ -38,7 +40,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     result.data.orders = nextPage.data.orders;
   }
 
-  await CsvHelper.generateCsv(ordersList, new RateHelper(), language || "");
-
-  return ordersList;
+  return await CsvHelper.generateCsv(
+    ordersList,
+    new RateHelper(),
+    language || "",
+  );
 };
