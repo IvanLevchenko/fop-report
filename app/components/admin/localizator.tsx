@@ -1,18 +1,24 @@
 import { Box, Select } from "@shopify/polaris";
-import { useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 import { useLocalizator } from "app/hooks/use-localizator";
 
 import { label as defaultLabel } from "app/i18n/components/localizator/en.json";
 
-export default function Localizator() {
+type Props = {
+  localization: string;
+};
+
+export default function Localizator(props: PropsWithChildren<Props>) {
   const localizations = [
     { label: "English", value: "en" },
     { label: "Українська", value: "ua" },
   ];
 
   const [label, setLabel] = useState(defaultLabel);
-  const [value, setValue] = useState(localizations[0].value);
+  const [value, setValue] = useState(
+    props.localization || localizations[0].value,
+  );
   const { localization, setLocalization } = useLocalizator();
 
   const handleSelectChange = (value: string) => {

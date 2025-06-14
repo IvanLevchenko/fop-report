@@ -23,6 +23,7 @@ model Session {
   locale        String?
   collaborator  Boolean?  @default(false)
   emailVerified Boolean?  @default(false)
+  localization  String    @default("en")
 }
 
 model Rate {

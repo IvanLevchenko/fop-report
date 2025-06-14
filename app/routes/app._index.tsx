@@ -173,7 +173,7 @@ export default function Index() {
       <TitleBar title="Title"></TitleBar>
       <BlockStack gap="500">
         <InlineStack align="end">
-          <Localizator />
+          <Localizator localization={localization} />
         </InlineStack>
         <Layout>
           <Card>
