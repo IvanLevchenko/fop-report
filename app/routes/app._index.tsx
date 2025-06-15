@@ -87,7 +87,7 @@ export default function Index() {
 
   useEffect(() => {
     if (fetcher.data && fetcher.state === "idle" && exportRef.current) {
-      // shopify.toast.show(i18n.successToast);
+      shopify.toast.show(i18n.successToast);
     }
 
     if (fetcher.data && exportRef.current) {

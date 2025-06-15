@@ -3,7 +3,7 @@
 client_id = "d1b3b7b5513b33ab7769a60a7bdd4c52"
 name = "fop-report"
 handle = "fop-report"
-application_url = "https://webcams-stainless-tomorrow-airport.trycloudflare.com"
+application_url = "https://visiting-taxes-naval-merger.trycloudflare.com"
 embedded = true
 
 [build]
@@ -27,9 +27,9 @@ scopes = "write_products,read_orders,write_orders"
 
 [auth]
 redirect_urls = [
-  "https://webcams-stainless-tomorrow-airport.trycloudflare.com/auth/callback",
-  "https://webcams-stainless-tomorrow-airport.trycloudflare.com/auth/shopify/callback",
-  "https://webcams-stainless-tomorrow-airport.trycloudflare.com/api/auth/callback"
+  "https://visiting-taxes-naval-merger.trycloudflare.com/auth/callback",
+  "https://visiting-taxes-naval-merger.trycloudflare.com/auth/shopify/callback",
+  "https://visiting-taxes-naval-merger.trycloudflare.com/api/auth/callback"
 ]
 
 [pos]

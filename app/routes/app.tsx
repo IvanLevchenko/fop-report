@@ -27,11 +27,14 @@ export default function App() {
     if (localization !== "en") {
       import(`../i18n/components/date-picker/${localization}.json`)
         .then((module) => {
+          console.log(module.default);
           setCustomLocalization(module.default);
         })
         .catch((e) => {
           console.error("Failed to load localization module:", e);
         });
+    } else {
+      setCustomLocalization(undefined);
     }
   }, [localization]);
 
