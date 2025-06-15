@@ -1,5 +1,6 @@
 {
   "name": "fop-report",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "build": "remix vite:build",
