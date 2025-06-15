@@ -42,6 +42,12 @@ export function orders(
                 currencyCode
               }
             }
+            totalShippingPriceSet {
+              shopMoney {
+                amount
+                currencyCode
+              }
+            }
           }
         }
 

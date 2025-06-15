@@ -8,5 +8,6 @@ export type ExportOrder = {
   createdAt: Date;
   totalPriceSet: MoneySet;
   netPaymentSet: MoneySet;
+  totalShippingPriceSet: MoneySet;
   totalTaxSet: MoneySet;
 };

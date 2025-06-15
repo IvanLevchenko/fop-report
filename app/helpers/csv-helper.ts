@@ -28,11 +28,13 @@ export class CsvHelper {
     const values = [];
 
     for (const order of orders) {
-      const rate =
-        (await rateHelper.getRate(
-          new Date(order.createdAt),
-          order.totalPriceSet?.shopMoney.currencyCode,
-        )) || 0;
+      const createdDate = new Date(order.createdAt);
+      const currencyCode = order.totalPriceSet?.shopMoney.currencyCode;
+      const isUah = currencyCode.toLowerCase() === "uah";
+
+      const rate = !isUah
+        ? (await rateHelper.getRate(createdDate, currencyCode)) || 0
+        : 1;
 
       const getAmountInUah = (
         amount: string,
@@ -41,10 +43,14 @@ export class CsvHelper {
         return amount && rate ? ((Number(amount) || 0) * rate).toFixed(2) : "-";
       };
 
-      const totalNetInUah = getAmountInUah(
-        order.netPaymentSet?.shopMoney.amount,
-        rate,
-      );
+      const netPayment = Number(order.netPaymentSet?.shopMoney.amount);
+      const totalNetProfit = netPayment
+        ? netPayment -
+            (Number(order.totalTaxSet.shopMoney.amount) || 0) -
+            Number(order.totalShippingPriceSet?.shopMoney.amount) || 0
+        : 0;
+
+      const totalNetInUah = getAmountInUah(totalNetProfit.toString(), rate);
       const totalTaxInUah = getAmountInUah(
         order.totalTaxSet?.shopMoney.amount,
         rate,
@@ -58,7 +64,7 @@ export class CsvHelper {
         order.id,
         order.name,
         order.totalPriceSet?.shopMoney.amount,
-        order.netPaymentSet?.shopMoney.amount,
+        totalNetProfit,
         totalNetInUah,
         order.totalTaxSet?.shopMoney.amount,
         totalTaxInUah,
