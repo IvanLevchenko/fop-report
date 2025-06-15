@@ -18,12 +18,20 @@ import { useLocalizator } from "app/hooks/use-localizator";
 
 import defaultLocalization from "app/i18n/admin/en.json";
 import { useFetcher } from "@remix-run/react";
-import { type loader } from "./orders";
+import { type loader as ordersLoader } from "./orders";
 import { type GeneratedCsv } from "app/helpers/csv-helper";
 import { base64ToBlob } from "app/helpers/base64-to-blob";
+import { authenticate } from "app/shopify.server";
+import { type LoaderFunctionArgs } from "@remix-run/node";
+
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  await authenticate.admin(request);
+
+  return null;
+};
 
 export default function Index() {
-  const fetcher = useFetcher<typeof loader>();
+  const fetcher = useFetcher<typeof ordersLoader>();
   const exportRef = useRef(false);
 
   // Date management
