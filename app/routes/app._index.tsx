@@ -92,7 +92,7 @@ export default function Index() {
 
   return (
     <Page>
-      <TitleBar title="Title"></TitleBar>
+      <TitleBar title={i18n.title}></TitleBar>
       <BlockStack gap="500">
         <InlineStack align="end">
           <Localizator localization={localization} />
